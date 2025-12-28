@@ -1,4 +1,4 @@
-# Clinical EmotiSupport (Interim)
+# Clinical EmotiSupport 
 
 Multi-label emotion classification for patient/caregiver messages in a telemedicine context. The project includes synthetic data generation, data cleaning + consistency enforcement, EDA, a classical baseline model, and a fine-tuned DistilBERT model.
 
