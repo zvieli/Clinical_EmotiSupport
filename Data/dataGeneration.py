@@ -1,4 +1,6 @@
 # dataGenerator.py
+import argparse
+import os
 from ollama import chat
 import sys
 import json
@@ -11,11 +13,16 @@ from collections import Counter
 # CONFIG
 # ===============================
 MODEL_NAME = "deepseek-r1:8b"
-OUTPUT_FILE = "SIXTY_AND_MOVING_ON.jsonl"
+
+# Default: write directly to the dataset used by training.
+DEFAULT_OUTPUT_FILE = os.path.join("NLP", "Data", "dataset.jsonl")
 
 TOTAL_SAMPLES = 500
 BATCH_SIZE = 2
 SEED = 42
+
+# Allow some truly neutral messages (all labels 0). Helps neutral calibration.
+NEUTRAL_RATE = 0.05
 
 MAX_RETRIES_PER_SAMPLE = 12
 SLEEP_BETWEEN_BATCHES_SEC = 0.25
@@ -23,8 +30,6 @@ SLEEP_BETWEEN_BATCHES_SEC = 0.25
 # anti-stall
 FAIL_STREAK_SLEEP_AT = 25
 FAIL_STREAK_SLEEP_SEC = 3.0
-
-random.seed(SEED)
 
 # ===============================
 # ATTRIBUTE SPACES
@@ -80,7 +85,8 @@ ADMIN_TOPICS = [
     "specialist not accepting referral",
 ]
 
-EMOTIONS = ["anxiety", "confusion", "frustration", "anger", "disappointment"]
+# Keep in sync with NLP/Model/modelCreation.py EMOTIONS
+EMOTIONS = ["anxiety", "confusion", "frustration", "anger", "disappointment", "satisfaction"]
 AGE_GROUPS = ["young adult", "adult", "elderly"]
 
 CHANNELS = ["phone_call", "patient_portal", "email", "in_person", "pharmacy"]
@@ -201,6 +207,7 @@ TARGETS = {
         "frustration": 0.35,
         "anger": 0.25,
         "disappointment": 0.30,
+        "satisfaction": 0.08,
     },
 }
 
@@ -254,6 +261,7 @@ def _choose_emotion_pool(emotion_counts: Counter, total_so_far: int, k: int, exc
 # ATTRIBUTES
 # ===============================
 def sample_attributes(counters, total_so_far):
+    is_neutral = random.random() < NEUTRAL_RATE
     domain = _soft_choose(DOMAINS, counters["domain"], total_so_far, TARGETS["domain"])
     topic = random.choice(_topic_options_for_domain(domain))
 
@@ -266,10 +274,12 @@ def sample_attributes(counters, total_so_far):
     resolution = random.choices(RESOLUTION, weights=[0.60, 0.30, 0.10], k=1)[0]
     urgency = random.choices(URGENCY, weights=[0.35, 0.45, 0.20], k=1)[0]
 
-    pool_size = random.randint(2, 4)
-    emotions_pool = _choose_emotion_pool(counters["emotion"], total_so_far, pool_size)
-
-    emotions_pool = list(dict.fromkeys(emotions_pool))[:4]
+    if is_neutral:
+        emotions_pool = []
+    else:
+        pool_size = random.randint(2, 4)
+        emotions_pool = _choose_emotion_pool(counters["emotion"], total_so_far, pool_size)
+        emotions_pool = list(dict.fromkeys(emotions_pool))[:4]
 
     return {
         "domain": domain,
@@ -282,15 +292,19 @@ def sample_attributes(counters, total_so_far):
         "age_group": age_group,
         "length_bucket": length_bucket,
         "emotions_pool": emotions_pool,
+        "is_neutral": is_neutral,
     }
 
 # ===============================
 # PROMPT
 # ===============================
 def build_user_prompt(attrs):
-    # pick 1-3 dominant emotions from pool
-    num_emotions = random.randint(1, 3)
-    dominant = random.sample(attrs["emotions_pool"], k=min(num_emotions, len(attrs["emotions_pool"])))
+    if attrs.get("is_neutral"):
+        dominant = []
+    else:
+        # pick 1-3 dominant emotions from pool
+        num_emotions = random.randint(1, 3)
+        dominant = random.sample(attrs["emotions_pool"], k=min(num_emotions, len(attrs["emotions_pool"])))
 
     emotions_map = {e: (1 if e in dominant else 0) for e in EMOTIONS}
 
@@ -322,6 +336,9 @@ def build_user_prompt(attrs):
         style_instructions = "- Write as a caregiver about someone else (age/limitations ok).\n"
     elif style == "portal_message":
         style_instructions = "- Mention portal status / missing item / on-screen update.\n"
+
+    if "satisfaction" in dominant:
+        style_instructions += "- The tone should be positive / relieved / appreciative.\n"
 
     return f"""
 Generate ONE message that matches the dataset style seen in examples.
@@ -429,11 +446,37 @@ def load_existing_state(path):
 # MAIN
 # ===============================
 def main():
-    last_id, existing_texts, existing_count = load_existing_state(OUTPUT_FILE)
+    global MODEL_NAME, NEUTRAL_RATE
+
+    parser = argparse.ArgumentParser(description="Generate synthetic multi-label emotion dataset (JSONL).")
+    parser.add_argument("--out_file", default=DEFAULT_OUTPUT_FILE, help="Output JSONL file (default: NLP/Data/dataset.jsonl)")
+    parser.add_argument("--total_samples", type=int, default=TOTAL_SAMPLES, help="Total lines to have in output file")
+    parser.add_argument("--batch_size", type=int, default=BATCH_SIZE, help="Generation batch size")
+    parser.add_argument("--seed", type=int, default=SEED, help="Random seed")
+    parser.add_argument("--model_name", default=MODEL_NAME, help="Ollama model name")
+    parser.add_argument("--neutral_rate", type=float, default=NEUTRAL_RATE, help="Rate of all-zero (neutral) examples")
+    parser.add_argument("--fresh", action="store_true", help="Overwrite output file (start from empty)")
+    args = parser.parse_args()
+    MODEL_NAME = args.model_name
+    NEUTRAL_RATE = float(max(0.0, min(1.0, args.neutral_rate)))
+
+    random.seed(args.seed)
+
+    out_dir = os.path.dirname(args.out_file)
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
+
+    if args.fresh:
+        try:
+            os.remove(args.out_file)
+        except FileNotFoundError:
+            pass
+
+    last_id, existing_texts, existing_count = load_existing_state(args.out_file)
 
     # We want TOTAL_SAMPLES lines total in file.
     # If file already has some, we only generate the remaining.
-    remaining = max(TOTAL_SAMPLES - existing_count, 0)
+    remaining = max(args.total_samples - existing_count, 0)
 
     if remaining == 0:
         print(f"File already has {existing_count} samples. Nothing to generate.")
@@ -452,9 +495,9 @@ def main():
         "emotion": Counter(),
     }
 
-    with open(OUTPUT_FILE, "a", encoding="utf-8") as f:
+    with open(args.out_file, "a", encoding="utf-8") as f:
         while generated_now < remaining:
-            for _ in range(BATCH_SIZE):
+            for _ in range(args.batch_size):
                 if generated_now >= remaining:
                     break
 
@@ -530,10 +573,10 @@ def main():
                         time.sleep(FAIL_STREAK_SLEEP_SEC)
                         fail_streak = 0
 
-            print(f"Generated {existing_count + generated_now}/{TOTAL_SAMPLES}")
+                print(f"Generated {existing_count + generated_now}/{args.total_samples}")
             time.sleep(SLEEP_BETWEEN_BATCHES_SEC)
 
-    print("Done. Dataset saved to:", OUTPUT_FILE)
+            print("Done. Dataset saved to:", args.out_file)
 
 if __name__ == "__main__":
     try:

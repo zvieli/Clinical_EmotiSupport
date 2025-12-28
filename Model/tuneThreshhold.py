@@ -29,18 +29,38 @@ def sigmoid(x):
     return 1.0 / (1.0 + np.exp(-x))
 
 def main():
-    # ====== EDIT THESE ======
-    data_path = r"Baseline Model\Data\dataset.jsonl"
-    model_dir = r"Baseline Model\Model\distilbert_run"
-    max_length = 256
-    test_size = 0.15
-    seed = 42
-    # ========================
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Tune a global label threshold on the held-out validation split")
+    parser.add_argument("--data_path", type=str, default=r"NLP\Data\dataset.jsonl")
+    parser.add_argument("--model_dir", type=str, default=r"Baseline Model\Model\distilbert_run")
+    parser.add_argument("--max_length", type=int, default=256)
+    parser.add_argument("--test_size", type=float, default=0.15)
+    parser.add_argument("--seed", type=int, default=42)
+    args = parser.parse_args()
+
+    data_path = args.data_path
+    model_dir = args.model_dir
+    max_length = args.max_length
+    test_size = args.test_size
+    seed = args.seed
 
     texts, labels = read_jsonl(data_path)
-    X_train, X_val, y_train, y_val = train_test_split(
-        texts, labels, test_size=test_size, random_state=seed, shuffle=True
-    )
+
+    split_path = os.path.join(model_dir, "split_indices.json")
+    if os.path.exists(split_path):
+        with open(split_path, "r", encoding="utf-8") as f:
+            split = json.load(f)
+        val_idx = split.get("val_idx", [])
+        X_val = [texts[i] for i in val_idx]
+        y_val = np.asarray([labels[i] for i in val_idx], dtype=np.float32)
+        print("Using saved split:", split_path)
+        print(f"Tuning on {len(X_val)} validation samples")
+    else:
+        _, X_val, _, y_val = train_test_split(
+            texts, labels, test_size=test_size, random_state=seed, shuffle=True
+        )
+        print("No saved split found; using a new random split")
 
     val_ds = make_dataset(X_val, y_val)
 
@@ -80,6 +100,7 @@ def main():
 
     best = None
     for thr in np.linspace(0.05, 0.95, 19):
+        thr = round(float(thr), 2)
         y_pred = (probs >= thr).astype(int)
         micro_f1 = f1_score(y_true, y_pred, average="micro", zero_division=0)
         micro_p  = precision_score(y_true, y_pred, average="micro", zero_division=0)
@@ -93,7 +114,19 @@ def main():
 
     # Save threshold to emotions.json (keep in-sync with predict)
     emotions_path = os.path.join(model_dir, "emotions.json")
-    payload = {"emotions": EMOTIONS, "threshold": best["threshold"]}
+    existing = {}
+    try:
+        with open(emotions_path, "r", encoding="utf-8") as f:
+            existing = json.load(f)
+    except Exception:
+        existing = {}
+
+    payload = {
+        "emotions": EMOTIONS,
+        "threshold": best["threshold"],
+        "neutral_threshold": float(existing.get("neutral_threshold", 0.35)),
+        "max_labels": int(existing.get("max_labels", 3)),
+    }
     with open(emotions_path, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
 

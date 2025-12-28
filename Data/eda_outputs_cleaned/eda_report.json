@@ -1,0 +1,690 @@
+{
+  "data_path": "NLP\\Data\\dataset.cleaned.jsonl",
+  "total": 1132,
+  "bad_lines": 0,
+  "domain_counts": {
+    "clinical": 564,
+    "administrative": 568
+  },
+  "emotion_counts": {
+    "anxiety": 466,
+    "confusion": 397,
+    "frustration": 463,
+    "anger": 374,
+    "disappointment": 290,
+    "satisfaction": 210
+  },
+  "multi_label_count": 672,
+  "label_cardinality": {
+    "1": 284,
+    "2": 321,
+    "4": 134,
+    "3": 175,
+    "0": 176,
+    "5": 39,
+    "6": 3
+  },
+  "length_words": {
+    "min": 7,
+    "mean": 67.09187279151944,
+    "max": 287
+  },
+  "duplication": {
+    "unique_texts": 1132,
+    "duplicate_texts": 0,
+    "duplicate_rows_beyond_first": 0
+  },
+  "explicit_word_hits": {
+    "anxiety": 392,
+    "confusion": 371,
+    "frustration": 394,
+    "anger": 126,
+    "disappointment": 221,
+    "satisfaction": 133
+  },
+  "explicit_word_label_mismatch": {
+    "anxiety": 0,
+    "confusion": 0,
+    "frustration": 0,
+    "anger": 0,
+    "disappointment": 0,
+    "satisfaction": 0
+  },
+  "mismatch_examples": [],
+  "top_template_openings": [
+    [
+      "this is completely unacceptable. ...",
+      53
+    ],
+    [
+      "Hi ...",
+      41
+    ],
+    [
+      "following up on the ...",
+      37
+    ],
+    [
+      "i checked the portal ...",
+      32
+    ],
+    [
+      "I am calling ...",
+      31
+    ],
+    [
+      "The portal ...",
+      30
+    ],
+    [
+      "during the call, i ...",
+      27
+    ],
+    [
+      "i cannot believe this ...",
+      26
+    ],
+    [
+      "i can't believe this ...",
+      26
+    ],
+    [
+      "on the patient portal, ...",
+      23
+    ],
+    [
+      "re: the issue from ...",
+      23
+    ],
+    [
+      "I am writing ...",
+      23
+    ],
+    [
+      "i wanted to follow ...",
+      22
+    ],
+    [
+      "this started about a ...",
+      21
+    ],
+    [
+      "Hello ...",
+      20
+    ],
+    [
+      "i'm reaching out for ...",
+      18
+    ],
+    [
+      "i'm contacting you for ...",
+      15
+    ],
+    [
+      "i'm following up for ...",
+      14
+    ],
+    [
+      "since my appointment earlier ...",
+      14
+    ],
+    [
+      "the receptionist told me ...",
+      11
+    ]
+  ],
+  "top_unigrams": [
+    [
+      "about",
+      858
+    ],
+    [
+      "need",
+      491
+    ],
+    [
+      "now",
+      474
+    ],
+    [
+      "it's",
+      425
+    ],
+    [
+      "appointment",
+      409
+    ],
+    [
+      "referral",
+      387
+    ],
+    [
+      "portal",
+      302
+    ],
+    [
+      "last",
+      299
+    ],
+    [
+      "because",
+      295
+    ],
+    [
+      "week",
+      290
+    ],
+    [
+      "confused",
+      268
+    ],
+    [
+      "case",
+      263
+    ],
+    [
+      "medication",
+      260
+    ],
+    [
+      "refill",
+      260
+    ],
+    [
+      "next",
+      259
+    ],
+    [
+      "any",
+      255
+    ],
+    [
+      "timeline",
+      252
+    ],
+    [
+      "request",
+      250
+    ],
+    [
+      "frustrated",
+      249
+    ],
+    [
+      "when",
+      248
+    ],
+    [
+      "received",
+      245
+    ],
+    [
+      "follow",
+      240
+    ],
+    [
+      "please",
+      237
+    ],
+    [
+      "time",
+      231
+    ],
+    [
+      "treatment",
+      226
+    ],
+    [
+      "get",
+      223
+    ],
+    [
+      "called",
+      221
+    ],
+    [
+      "update",
+      216
+    ],
+    [
+      "anxious",
+      216
+    ],
+    [
+      "number",
+      212
+    ],
+    [
+      "expect",
+      211
+    ],
+    [
+      "weeks",
+      200
+    ],
+    [
+      "keep",
+      198
+    ],
+    [
+      "delay",
+      196
+    ],
+    [
+      "will",
+      194
+    ],
+    [
+      "disappointed",
+      193
+    ],
+    [
+      "how",
+      191
+    ],
+    [
+      "what",
+      188
+    ],
+    [
+      "immediately",
+      188
+    ],
+    [
+      "unacceptable",
+      188
+    ],
+    [
+      "insurance",
+      182
+    ],
+    [
+      "issue",
+      179
+    ],
+    [
+      "can",
+      173
+    ],
+    [
+      "waiting",
+      172
+    ],
+    [
+      "results",
+      171
+    ],
+    [
+      "getting",
+      169
+    ],
+    [
+      "calling",
+      163
+    ],
+    [
+      "worried",
+      159
+    ],
+    [
+      "causing",
+      157
+    ],
+    [
+      "scheduled",
+      156
+    ]
+  ],
+  "top_bigrams": [
+    [
+      [
+        "case",
+        "number"
+      ],
+      196
+    ],
+    [
+      [
+        "confused",
+        "about"
+      ],
+      192
+    ],
+    [
+      [
+        "anxious",
+        "about"
+      ],
+      145
+    ],
+    [
+      [
+        "completely",
+        "unacceptable"
+      ],
+      125
+    ],
+    [
+      [
+        "last",
+        "week"
+      ],
+      101
+    ],
+    [
+      [
+        "worried",
+        "about"
+      ],
+      94
+    ],
+    [
+      [
+        "need",
+        "escalated"
+      ],
+      92
+    ],
+    [
+      [
+        "referral",
+        "request"
+      ],
+      91
+    ],
+    [
+      [
+        "escalated",
+        "immediately"
+      ],
+      87
+    ],
+    [
+      [
+        "expect",
+        "corrected"
+      ],
+      80
+    ],
+    [
+      [
+        "follow",
+        "appointment"
+      ],
+      77
+    ],
+    [
+      [
+        "haven't",
+        "received"
+      ],
+      76
+    ],
+    [
+      [
+        "two",
+        "weeks"
+      ],
+      75
+    ],
+    [
+      [
+        "appointment",
+        "scheduled"
+      ],
+      68
+    ],
+    [
+      [
+        "about",
+        "how"
+      ],
+      68
+    ],
+    [
+      [
+        "insurance",
+        "claim"
+      ],
+      67
+    ],
+    [
+      [
+        "especially",
+        "since"
+      ],
+      67
+    ],
+    [
+      [
+        "weeks",
+        "now"
+      ],
+      67
+    ],
+    [
+      [
+        "refill",
+        "request"
+      ],
+      66
+    ],
+    [
+      [
+        "treatment",
+        "plan"
+      ],
+      62
+    ],
+    [
+      [
+        "test",
+        "results"
+      ],
+      61
+    ],
+    [
+      [
+        "right",
+        "now"
+      ],
+      61
+    ],
+    [
+      [
+        "let",
+        "know"
+      ],
+      59
+    ],
+    [
+      [
+        "about",
+        "timeline"
+      ],
+      59
+    ],
+    [
+      [
+        "unacceptable",
+        "need"
+      ],
+      58
+    ],
+    [
+      [
+        "patient",
+        "portal"
+      ],
+      56
+    ],
+    [
+      [
+        "frustrated",
+        "because"
+      ],
+      55
+    ],
+    [
+      [
+        "next",
+        "week"
+      ],
+      54
+    ],
+    [
+      [
+        "corrected",
+        "right"
+      ],
+      54
+    ],
+    [
+      [
+        "it's",
+        "causing"
+      ],
+      52
+    ],
+    [
+      [
+        "last",
+        "thursday"
+      ],
+      50
+    ],
+    [
+      [
+        "back",
+        "forth"
+      ],
+      50
+    ],
+    [
+      [
+        "week",
+        "ago"
+      ],
+      49
+    ],
+    [
+      [
+        "next",
+        "tuesday"
+      ],
+      49
+    ],
+    [
+      [
+        "believe",
+        "happening"
+      ],
+      49
+    ],
+    [
+      [
+        "about",
+        "why"
+      ],
+      48
+    ],
+    [
+      [
+        "referral",
+        "specialist"
+      ],
+      48
+    ],
+    [
+      [
+        "feels",
+        "like"
+      ],
+      46
+    ],
+    [
+      [
+        "about",
+        "week"
+      ],
+      45
+    ],
+    [
+      [
+        "lab",
+        "results"
+      ],
+      45
+    ],
+    [
+      [
+        "right",
+        "away"
+      ],
+      45
+    ],
+    [
+      [
+        "immediately",
+        "expect"
+      ],
+      45
+    ],
+    [
+      [
+        "trying",
+        "get"
+      ],
+      43
+    ],
+    [
+      [
+        "schedule",
+        "follow"
+      ],
+      42
+    ],
+    [
+      [
+        "multiple",
+        "times"
+      ],
+      41
+    ],
+    [
+      [
+        "when",
+        "can"
+      ],
+      41
+    ],
+    [
+      [
+        "portal",
+        "update"
+      ],
+      41
+    ],
+    [
+      [
+        "there",
+        "any"
+      ],
+      40
+    ],
+    [
+      [
+        "what",
+        "happened"
+      ],
+      40
+    ],
+    [
+      [
+        "checked",
+        "portal"
+      ],
+      40
+    ]
+  ]
+}

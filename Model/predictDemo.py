@@ -16,9 +16,9 @@ def main():
         meta = json.load(f)
 
     emotions = meta["emotions"]
-    threshold = float(meta["threshold"])
-    neutral_threshold = float(meta["neutral_threshold"])
-    max_labels = int(meta["max_labels"])
+    threshold = float(meta.get("threshold", 0.5))
+    neutral_threshold = float(meta.get("neutral_threshold", 0.35))
+    max_labels = int(meta.get("max_labels", 3))
 
     tokenizer = AutoTokenizer.from_pretrained(model_dir, local_files_only=True)
     model = AutoModelForSequenceClassification.from_pretrained(model_dir, local_files_only=True)

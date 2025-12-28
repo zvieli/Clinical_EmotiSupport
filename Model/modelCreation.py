@@ -131,10 +131,10 @@ def main():
     parser.add_argument(
         "--data_path",
         type=str,
-        default=r"Baseline Model\Data\dataset.jsonl",  # עדכנו אם צריך
+        default=r"NLP\Data\dataset.jsonl",
         help="Path to the dataset jsonl file",
     )
-    parser.add_argument("--out_dir", type=str, default="distilbert_run")
+    parser.add_argument("--out_dir", type=str, default=r"Baseline Model\Model\distilbert_run")
     parser.add_argument("--model_name", type=str, default="distilbert-base-uncased")
     parser.add_argument("--max_length", type=int, default=256)
     parser.add_argument("--test_size", type=float, default=0.15)
@@ -167,13 +167,35 @@ def main():
 
     texts, labels = read_jsonl(args.data_path)
 
-    X_train, X_val, y_train, y_val = train_test_split(
-        texts,
-        labels,
+    # Build a stable split by indices, then index into texts/labels.
+    indices = list(range(len(texts)))
+    train_idx, val_idx = train_test_split(
+        indices,
         test_size=args.test_size,
         random_state=args.seed,
         shuffle=True,
     )
+
+    # Persist split for reproducible evaluation
+    split_path = os.path.join(args.out_dir, "split_indices.json")
+    with open(split_path, "w", encoding="utf-8") as f:
+        json.dump(
+            {
+                "seed": args.seed,
+                "test_size": args.test_size,
+                "train_idx": train_idx,
+                "val_idx": val_idx,
+            },
+            f,
+            ensure_ascii=False,
+            indent=2,
+        )
+    print("Saved split to:", split_path)
+
+    X_train = [texts[i] for i in train_idx]
+    X_val = [texts[i] for i in val_idx]
+    y_train = [labels[i] for i in train_idx]
+    y_val = [labels[i] for i in val_idx]
 
     train_ds = make_dataset(X_train, y_train)
     val_ds = make_dataset(X_val, y_val)
@@ -236,7 +258,12 @@ def main():
 
     with open(os.path.join(args.out_dir, "emotions.json"), "w", encoding="utf-8") as f:
         json.dump(
-            {"emotions": EMOTIONS, "threshold": args.threshold},
+            {
+                "emotions": EMOTIONS,
+                "threshold": args.threshold,
+                "neutral_threshold": 0.35,
+                "max_labels": 3,
+            },
             f,
             ensure_ascii=False,
             indent=2,
