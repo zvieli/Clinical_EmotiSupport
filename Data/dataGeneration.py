@@ -15,7 +15,7 @@ from collections import Counter
 MODEL_NAME = "deepseek-r1:8b"
 
 # Default: write directly to the dataset used by training.
-DEFAULT_OUTPUT_FILE = os.path.join("NLP", "Data", "dataset.jsonl")
+DEFAULT_OUTPUT_FILE = os.path.join("Data", "dataset.jsonl")
 
 TOTAL_SAMPLES = 500
 BATCH_SIZE = 2
@@ -449,7 +449,7 @@ def main():
     global MODEL_NAME, NEUTRAL_RATE
 
     parser = argparse.ArgumentParser(description="Generate synthetic multi-label emotion dataset (JSONL).")
-    parser.add_argument("--out_file", default=DEFAULT_OUTPUT_FILE, help="Output JSONL file (default: NLP/Data/dataset.jsonl)")
+    parser.add_argument("--out_file", default=DEFAULT_OUTPUT_FILE, help="Output JSONL file (default: Data/dataset.jsonl)")
     parser.add_argument("--total_samples", type=int, default=TOTAL_SAMPLES, help="Total lines to have in output file")
     parser.add_argument("--batch_size", type=int, default=BATCH_SIZE, help="Generation batch size")
     parser.add_argument("--seed", type=int, default=SEED, help="Random seed")

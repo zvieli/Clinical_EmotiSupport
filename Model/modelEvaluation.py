@@ -57,7 +57,7 @@ def main():
 
     parser = argparse.ArgumentParser(description="Evaluate a locally-saved multi-label Transformers model")
     parser.add_argument("--model_dir", type=str, default=r"Baseline Model\Model\distilbert_run")
-    parser.add_argument("--data_path", type=str, default=r"NLP\Data\dataset.jsonl")
+    parser.add_argument("--data_path", type=str, default=r"Data\dataset.jsonl")
     parser.add_argument("--max_length", type=int, default=256)
     parser.add_argument(
         "--threshold",

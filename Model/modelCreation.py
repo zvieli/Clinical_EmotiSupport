@@ -131,7 +131,7 @@ def main():
     parser.add_argument(
         "--data_path",
         type=str,
-        default=r"NLP\Data\dataset.jsonl",
+        default=r"Data\dataset.jsonl",
         help="Path to the dataset jsonl file",
     )
     parser.add_argument("--out_dir", type=str, default=r"Baseline Model\Model\distilbert_run")

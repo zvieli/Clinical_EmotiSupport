@@ -66,7 +66,7 @@ def sigmoid(x: np.ndarray) -> np.ndarray:
 
 def main():
     parser = argparse.ArgumentParser(description="TF-IDF + Logistic Regression baseline for multi-label emotions")
-    parser.add_argument("--data_path", type=str, default=r"NLP\Data\dataset.jsonl")
+    parser.add_argument("--data_path", type=str, default=r"Data\dataset.jsonl")
     parser.add_argument(
         "--align_with_model_dir",
         type=str,

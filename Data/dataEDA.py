@@ -7,7 +7,7 @@ from collections import Counter, defaultdict
 import matplotlib
 import matplotlib.pyplot as plt
 
-DEFAULT_DATA_PATH = "NLP\\Data\\dataset.jsonl"
+DEFAULT_DATA_PATH = "Data\\dataset.jsonl"
 
 # Keep in sync with NLP/Model/modelCreation.py EMOTIONS
 EMOTION_KEYS = ["anxiety", "confusion", "frustration", "anger", "disappointment", "satisfaction"]
@@ -110,7 +110,7 @@ def save_bar_plot(path: str, title: str, xlabels: list, values: list, xlabel: st
 def main():
     parser = argparse.ArgumentParser(description="EDA for dataset.jsonl (domains + multi-label emotions)")
     parser.add_argument("--data_path", type=str, default=DEFAULT_DATA_PATH)
-    parser.add_argument("--save_dir", type=str, default=os.path.join("NLP", "Data", "eda_outputs"))
+    parser.add_argument("--save_dir", type=str, default=os.path.join("Data", "eda_outputs"))
     parser.add_argument("--save_plots", action="store_true", help="Save plots to save_dir (PNG)")
     parser.add_argument("--no_show", action="store_true", help="Do not call plt.show()")
     parser.add_argument("--top_k", type=int, default=20)

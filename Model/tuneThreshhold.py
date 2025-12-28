@@ -32,7 +32,7 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="Tune a global label threshold on the held-out validation split")
-    parser.add_argument("--data_path", type=str, default=r"NLP\Data\dataset.jsonl")
+    parser.add_argument("--data_path", type=str, default=r"Data\dataset.jsonl")
     parser.add_argument("--model_dir", type=str, default=r"Baseline Model\Model\distilbert_run")
     parser.add_argument("--max_length", type=int, default=256)
     parser.add_argument("--test_size", type=float, default=0.15)

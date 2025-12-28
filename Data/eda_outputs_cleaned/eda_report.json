@@ -1,5 +1,5 @@
 {
-  "data_path": "NLP\\Data\\dataset.cleaned.jsonl",
+  "data_path": "Data\\dataset.cleaned.jsonl",
   "total": 1132,
   "bad_lines": 0,
   "domain_counts": {
