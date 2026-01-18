@@ -2,6 +2,9 @@
 
 Multi-label emotion classification for patient/caregiver messages in a telemedicine context. The project includes synthetic data generation, data cleaning + consistency enforcement, EDA, a classical baseline model, and a fine-tuned DistilBERT model.
 
+Model in Hugging Face:
+```https://huggingface.co/yuval9500/clinical-emotisupport-bert```
+
 ## Journey (from interim feedback to the final baseline)
 
 After the interim feedback, we moved from a weaker/less-defensible approach to a clear, measurable, and reproducible pipeline:
