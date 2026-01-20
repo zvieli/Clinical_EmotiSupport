@@ -32,8 +32,8 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="Tune a global label threshold on the held-out validation split")
-    parser.add_argument("--data_path", type=str, default=r"Data\dataset.jsonl")
-    parser.add_argument("--model_dir", type=str, default=r"Baseline Model\Model\distilbert_run")
+    parser.add_argument("--data_path", type=str, default=r"Data\dataset_final_v4.jsonl")
+    parser.add_argument("--model_dir", type=str, default=r"ClinicalBERT_Run_v1")
     parser.add_argument("--max_length", type=int, default=256)
     parser.add_argument("--test_size", type=float, default=0.15)
     parser.add_argument("--seed", type=int, default=42)
@@ -74,7 +74,6 @@ def main():
     model = AutoModelForSequenceClassification.from_pretrained(model_dir)
     model.eval()
 
-    # run inference
     all_logits = []
     all_true = []
 
@@ -112,7 +111,6 @@ def main():
     print("\nBEST THRESHOLD:")
     print(best)
 
-    # Save threshold to emotions.json (keep in-sync with predict)
     emotions_path = os.path.join(model_dir, "emotions.json")
     existing = {}
     try:

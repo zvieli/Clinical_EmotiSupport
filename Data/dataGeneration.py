@@ -9,31 +9,22 @@ import random
 import re
 from collections import Counter
 
-# ===============================
-# CONFIG
-# ===============================
 MODEL_NAME = "deepseek-r1:8b"
 
-# Default: write directly to the dataset used by training.
 DEFAULT_OUTPUT_FILE = os.path.join("Data", "dataset.jsonl")
 
-TOTAL_SAMPLES = 500
+TOTAL_SAMPLES = 2000
 BATCH_SIZE = 2
 SEED = 42
 
-# Allow some truly neutral messages (all labels 0). Helps neutral calibration.
 NEUTRAL_RATE = 0.05
 
 MAX_RETRIES_PER_SAMPLE = 12
 SLEEP_BETWEEN_BATCHES_SEC = 0.25
 
-# anti-stall
 FAIL_STREAK_SLEEP_AT = 25
 FAIL_STREAK_SLEEP_SEC = 3.0
 
-# ===============================
-# ATTRIBUTE SPACES
-# ===============================
 DOMAINS = ["clinical", "administrative"]
 
 CLINICAL_TOPICS = [
@@ -85,7 +76,6 @@ ADMIN_TOPICS = [
     "specialist not accepting referral",
 ]
 
-# Keep in sync with NLP/Model/modelCreation.py EMOTIONS
 EMOTIONS = ["anxiety", "confusion", "frustration", "anger", "disappointment", "satisfaction"]
 AGE_GROUPS = ["young adult", "adult", "elderly"]
 
@@ -157,11 +147,6 @@ OPENERS = {
     ],
 }
 
-# NOTE:
-# הדאטה שלכם בפועל *כן* מכיל מילים כמו confused/worried וכו'.
-# כדי להמשיך "באותו אופן" אנחנו לא מפילים עליהן.
-# לכן אין פה FORBIDDEN_WORDS FILTER.
-
 SYSTEM_PROMPT = """
 You are generating realistic patient / caregiver messages for a dataset.
 
@@ -177,9 +162,6 @@ The message can be short or long and may include:
 - concise bullet-like lines separated by \\n (if style asks)
 """
 
-# ===============================
-# JSON EXTRACTION (fixes non-JSON wrappers)
-# ===============================
 def extract_first_json_object(s: str):
     if not s:
         raise ValueError("Empty model output")
@@ -192,9 +174,6 @@ def extract_first_json_object(s: str):
     candidate = s[start:end+1]
     return json.loads(candidate)
 
-# ===============================
-# QUOTA-AWARE CHOICE (soft)
-# ===============================
 TARGETS = {
     "domain": {"clinical": 0.50, "administrative": 0.50},
     "style": {s: 1.0 / len(STYLES) for s in STYLES},
@@ -257,9 +236,6 @@ def _choose_emotion_pool(emotion_counts: Counter, total_so_far: int, k: int, exc
         pool_weights.pop(idx)
     return chosen
 
-# ===============================
-# ATTRIBUTES
-# ===============================
 def sample_attributes(counters, total_so_far):
     is_neutral = random.random() < NEUTRAL_RATE
     domain = _soft_choose(DOMAINS, counters["domain"], total_so_far, TARGETS["domain"])
@@ -295,14 +271,10 @@ def sample_attributes(counters, total_so_far):
         "is_neutral": is_neutral,
     }
 
-# ===============================
-# PROMPT
-# ===============================
 def build_user_prompt(attrs):
     if attrs.get("is_neutral"):
         dominant = []
     else:
-        # pick 1-3 dominant emotions from pool
         num_emotions = random.randint(1, 3)
         dominant = random.sample(attrs["emotions_pool"], k=min(num_emotions, len(attrs["emotions_pool"])))
 
@@ -382,9 +354,6 @@ JSON schema:
 }}
 """
 
-# ===============================
-# GENERATE
-# ===============================
 def generate_one(attrs):
     resp = chat(
         model=MODEL_NAME,
@@ -397,9 +366,6 @@ def generate_one(attrs):
     )
     return resp.message.content.strip()
 
-# ===============================
-# COUNTERS
-# ===============================
 def update_counters(counters, attrs, data):
     counters["domain"][attrs["domain"]] += 1
     counters["style"][attrs["style"]] += 1
@@ -412,9 +378,6 @@ def update_counters(counters, attrs, data):
         if int(emos.get(e, 0)) == 1:
             counters["emotion"][e] += 1
 
-# ===============================
-# LOAD STATE (continue IDs + avoid duplicates)
-# ===============================
 def load_existing_state(path):
     last_id = 0
     existing_texts = set()
@@ -442,9 +405,6 @@ def load_existing_state(path):
 
     return last_id, existing_texts, existing_count
 
-# ===============================
-# MAIN
-# ===============================
 def main():
     global MODEL_NAME, NEUTRAL_RATE
 
@@ -474,8 +434,6 @@ def main():
 
     last_id, existing_texts, existing_count = load_existing_state(args.out_file)
 
-    # We want TOTAL_SAMPLES lines total in file.
-    # If file already has some, we only generate the remaining.
     remaining = max(args.total_samples - existing_count, 0)
 
     if remaining == 0:
@@ -514,7 +472,6 @@ def main():
 
                         data = extract_first_json_object(raw)
 
-                        # enforce required fields
                         if "text" not in data or not isinstance(data["text"], str):
                             continue
 
@@ -522,15 +479,12 @@ def main():
                         if not text:
                             continue
 
-                        # avoid exact duplicates
                         if text in existing_texts:
                             continue
 
-                        # enforce domain + language
                         data["domain"] = attrs["domain"]
                         data["language"] = "en"
 
-                        # enforce emotions as exact 0/1 ints with correct keys
                         fixed = {}
                         for e in EMOTIONS:
                             v = data.get("emotions", {}).get(e, 0)
@@ -541,7 +495,6 @@ def main():
                             fixed[e] = 1 if v == 1 else 0
                         data["emotions"] = fixed
 
-                        # accept
                         data["id"] = current_id
                         current_id += 1
 

@@ -1,422 +1,338 @@
 {
-  "data_path": "NLP\\Data\\dataset.jsonl",
-  "total": 892,
+  "data_path": "Data\\dataset_final_v4.jsonl",
+  "total": 2000,
   "bad_lines": 0,
   "domain_counts": {
-    "clinical": 446,
-    "administrative": 446
+    "clinical": 1003,
+    "administrative": 997
   },
   "emotion_counts": {
-    "anxiety": 295,
-    "confusion": 221,
-    "frustration": 250,
-    "anger": 194,
-    "disappointment": 214,
-    "satisfaction": 177
+    "anxiety": 1003,
+    "confusion": 953,
+    "frustration": 957,
+    "anger": 633,
+    "disappointment": 697,
+    "satisfaction": 373
   },
-  "multi_label_count": 462,
+  "multi_label_count": 1409,
   "label_cardinality": {
-    "1": 292,
-    "2": 334,
-    "3": 124,
-    "0": 138,
-    "5": 3,
-    "4": 1
+    "1": 404,
+    "2": 567,
+    "4": 304,
+    "3": 420,
+    "0": 187,
+    "5": 106,
+    "6": 12
   },
   "length_words": {
     "min": 7,
-    "mean": 64.44506726457399,
-    "max": 287
+    "mean": 67.297,
+    "max": 349
   },
   "duplication": {
-    "unique_texts": 892,
+    "unique_texts": 2000,
     "duplicate_texts": 0,
     "duplicate_rows_beyond_first": 0
   },
   "explicit_word_hits": {
-    "anxiety": 392,
-    "confusion": 371,
-    "frustration": 343,
-    "anger": 56,
-    "disappointment": 221,
-    "satisfaction": 133
+    "anxiety": 878,
+    "confusion": 886,
+    "frustration": 832,
+    "anger": 210,
+    "disappointment": 542,
+    "satisfaction": 272
   },
   "explicit_word_label_mismatch": {
-    "anxiety": 171,
-    "confusion": 176,
-    "frustration": 153,
+    "anxiety": 0,
+    "confusion": 0,
+    "frustration": 0,
     "anger": 0,
-    "disappointment": 76,
-    "satisfaction": 33
+    "disappointment": 0,
+    "satisfaction": 0
   },
-  "mismatch_examples": [
-    {
-      "emotion": "confusion",
-      "domain": "administrative",
-      "id": 4,
-      "text": "The pharmacist mentioned that there was a delay in processing the insurance claim, and I'm not clear on who is responsible for paying the remaining balance. They said it might take a few days, but I'm still waiting and unsure what to do next.",
-      "label_value": 0
-    },
-    {
-      "emotion": "confusion",
-      "domain": "clinical",
-      "id": 11,
-      "text": "Re: the issue from my last call, I'm still waiting on the results for my recent blood test from June 15th. I called earlier about it and was told someone would contact me, but I haven't heard back yet. The doctor's office mentioned they were looking into it, but I'm not sure what that means exactly.",
-      "label_value": 0
-    },
-    {
-      "emotion": "confusion",
-      "domain": "administrative",
-      "id": 17,
-      "text": "I'm following up for my mother-in-law, who is in her late 70s and relies on specific pharmacies for refills. The prescription was sent to the wrong location yesterday, and I've been trying to coordinate with the pharmacy chain for clarification. They mentioned it could be due to a system update, but",
-      "label_value": 0
-    },
-    {
-      "emotion": "confusion",
-      "domain": "clinical",
-      "id": 35,
-      "text": "One issue: I'm calling because the discharge instructions were unclear about when to follow up. I called earlier but didn't get a clear answer, so I'm trying again now.",
-      "label_value": 0
-    },
-    {
-      "emotion": "confusion",
-      "domain": "clinical",
-      "id": 46,
-      "text": "Need clarification: The patient has completed their treatment but received no follow-up instructions. They are unsure about next steps and when to schedule a check-up. Could you please provide guidance on post-care plans and timelines?",
-      "label_value": 0
-    },
-    {
-      "emotion": "frustration",
-      "domain": "administrative",
-      "id": 48,
-      "text": "Following up on the request from last week, I wanted to let you know that we're still working on scheduling your appointment for the 25th. There seems to be some confusion about the availability, and I'm a bit frustrated that it's taking longer than expected. Let me know if you have any questions ab",
-      "label_value": 0
-    },
-    {
-      "emotion": "confusion",
-      "domain": "clinical",
-      "id": 50,
-      "text": "Following up on the request from last week, I'm still confused about the medication instructions for the refill. The case number is 12345, and I've been trying to figure this out for three days now. I'm really disappointed and frustrated because my mom relies on these meds, and I can't seem to get a",
-      "label_value": 0
-    },
-    {
-      "emotion": "frustration",
-      "domain": "clinical",
-      "id": 50,
-      "text": "Following up on the request from last week, I'm still confused about the medication instructions for the refill. The case number is 12345, and I've been trying to figure this out for three days now. I'm really disappointed and frustrated because my mom relies on these meds, and I can't seem to get a",
-      "label_value": 0
-    },
-    {
-      "emotion": "anxiety",
-      "domain": "clinical",
-      "id": 54,
-      "text": "I checked the portal this morning and noticed that my recent blood test results are still pending, but I'm supposed to come back for repeat testing in two weeks. I'm confused because the doctor mentioned the results would be available sooner. Also, my case number is 789-45-6789, and I'm trying to un",
-      "label_value": 0
-    },
-    {
-      "emotion": "anxiety",
-      "domain": "administrative",
-      "id": 56,
-      "text": "Last Thursday, I called the clinic to follow up on my referral for physical therapy. They assured me they had sent it correctly. But now, I'm calling again because I haven't received anything, and my appointment is in two weeks. I'm really angry because this is the second time they've sent it incorr",
-      "label_value": 0
-    },
-    {
-      "emotion": "frustration",
-      "domain": "administrative",
-      "id": 56,
-      "text": "Last Thursday, I called the clinic to follow up on my referral for physical therapy. They assured me they had sent it correctly. But now, I'm calling again because I haven't received anything, and my appointment is in two weeks. I'm really angry because this is the second time they've sent it incorr",
-      "label_value": 0
-    },
-    {
-      "emotion": "disappointment",
-      "domain": "administrative",
-      "id": 56,
-      "text": "Last Thursday, I called the clinic to follow up on my referral for physical therapy. They assured me they had sent it correctly. But now, I'm calling again because I haven't received anything, and my appointment is in two weeks. I'm really angry because this is the second time they've sent it incorr",
-      "label_value": 0
-    }
-  ],
+  "mismatch_examples": [],
   "top_template_openings": [
     [
-      "following up on the ...",
-      37
-    ],
-    [
-      "i checked the portal ...",
-      32
-    ],
-    [
       "The portal ...",
-      30
-    ],
-    [
-      "Hi ...",
-      30
+      71
     ],
     [
       "during the call, i ...",
-      27
+      51
+    ],
+    [
+      "Hi ...",
+      51
     ],
     [
       "on the patient portal, ...",
-      23
+      48
     ],
     [
-      "re: the issue from ...",
-      23
+      "this started about a ...",
+      48
     ],
     [
-      "I am writing ...",
-      23
+      "I am calling ...",
+      48
+    ],
+    [
+      "since my appointment earlier ...",
+      45
+    ],
+    [
+      "i'm contacting you for ...",
+      42
+    ],
+    [
+      "the receptionist told me ...",
+      36
+    ],
+    [
+      "Hello ...",
+      34
+    ],
+    [
+      "i'm reaching out for ...",
+      30
+    ],
+    [
+      "i'm following up for ...",
+      29
+    ],
+    [
+      "i checked the portal ...",
+      29
+    ],
+    [
+      "over the past two ...",
+      29
+    ],
+    [
+      "i cannot believe this ...",
+      26
+    ],
+    [
+      "i can't believe this ...",
+      26
+    ],
+    [
+      "look, following up on ...",
+      25
     ],
     [
       "i wanted to follow ...",
       22
     ],
     [
-      "this started about a ...",
+      "request from last week, ...",
       21
     ],
     [
-      "I am calling ...",
-      20
-    ],
-    [
-      "i'm reaching out for ...",
-      18
-    ],
-    [
-      "i'm contacting you for ...",
-      15
-    ],
-    [
-      "i'm following up for ...",
-      14
-    ],
-    [
-      "since my appointment earlier ...",
-      14
-    ],
-    [
-      "Hello ...",
-      13
-    ],
-    [
-      "the receptionist told me ...",
-      11
-    ],
-    [
-      "over the past two ...",
-      11
-    ],
-    [
-      "last thursday, i called ...",
-      10
-    ],
-    [
-      "i just received the ...",
-      9
+      "I am writing ...",
+      21
     ]
   ],
   "top_unigrams": [
     [
       "about",
-      766
+      1762
     ],
     [
       "appointment",
-      336
-    ],
-    [
-      "it's",
-      293
-    ],
-    [
-      "now",
-      281
+      772
     ],
     [
       "need",
-      273
+      757
     ],
     [
-      "referral",
-      269
+      "it's",
+      737
     ],
     [
-      "portal",
-      269
+      "now",
+      727
     ],
     [
       "confused",
-      268
+      687
     ],
     [
       "last",
-      262
+      640
     ],
     [
       "because",
-      261
-    ],
-    [
-      "week",
-      257
-    ],
-    [
-      "next",
-      232
-    ],
-    [
-      "timeline",
-      218
-    ],
-    [
-      "anxious",
-      216
-    ],
-    [
-      "frustrated",
-      213
-    ],
-    [
-      "treatment",
-      212
+      629
     ],
     [
       "medication",
-      208
+      553
     ],
     [
-      "any",
-      208
+      "week",
+      550
     ],
     [
-      "when",
-      200
+      "portal",
+      547
     ],
     [
-      "refill",
-      196
+      "referral",
+      522
     ],
     [
-      "follow",
-      193
+      "frustrated",
+      518
+    ],
+    [
+      "anxious",
+      495
+    ],
+    [
+      "treatment",
+      477
+    ],
+    [
+      "timeline",
+      473
     ],
     [
       "disappointed",
-      193
+      469
     ],
     [
-      "request",
-      189
+      "next",
+      466
     ],
     [
-      "received",
-      186
+      "refill",
+      463
     ],
     [
-      "update",
-      183
-    ],
-    [
-      "delay",
-      178
-    ],
-    [
-      "what",
-      177
-    ],
-    [
-      "case",
-      177
+      "when",
+      455
     ],
     [
       "called",
-      175
+      445
+    ],
+    [
+      "any",
+      442
+    ],
+    [
+      "follow",
+      420
+    ],
+    [
+      "received",
+      411
+    ],
+    [
+      "case",
+      407
     ],
     [
       "get",
-      168
+      391
     ],
     [
-      "results",
-      165
-    ],
-    [
-      "please",
-      165
-    ],
-    [
-      "worried",
-      159
-    ],
-    [
-      "issue",
-      152
-    ],
-    [
-      "her",
-      148
+      "what",
+      384
     ],
     [
       "since",
-      145
+      374
     ],
     [
-      "getting",
-      145
+      "delay",
+      359
     ],
     [
-      "number",
-      143
-    ],
-    [
-      "causing",
-      141
+      "worried",
+      358
     ],
     [
       "how",
-      140
+      347
     ],
     [
-      "insurance",
-      138
+      "weeks",
+      337
+    ],
+    [
+      "request",
+      337
+    ],
+    [
+      "time",
+      337
+    ],
+    [
+      "issue",
+      332
+    ],
+    [
+      "causing",
+      332
+    ],
+    [
+      "update",
+      331
     ],
     [
       "can",
-      137
+      326
     ],
     [
-      "his",
-      136
+      "number",
+      322
     ],
     [
-      "clear",
-      131
+      "please",
+      320
     ],
     [
-      "haven't",
-      130
+      "getting",
+      317
+    ],
+    [
+      "results",
+      313
+    ],
+    [
+      "her",
+      307
     ],
     [
       "waiting",
-      129
+      299
     ],
     [
-      "specialist",
-      129
+      "insurance",
+      298
     ],
     [
-      "due",
-      127
+      "his",
+      298
+    ],
+    [
+      "regarding",
+      296
+    ],
+    [
+      "might",
+      292
     ],
     [
       "scheduled",
-      127
+      288
     ],
     [
       "trying",
-      127
+      288
     ]
   ],
   "top_bigrams": [
@@ -425,350 +341,350 @@
         "confused",
         "about"
       ],
-      192
+      479
     ],
     [
       [
         "anxious",
         "about"
       ],
-      145
+      338
     ],
     [
       [
         "case",
         "number"
       ],
-      134
+      303
     ],
     [
       [
         "worried",
         "about"
       ],
-      94
+      205
     ],
     [
       [
         "last",
         "week"
       ],
-      88
-    ],
-    [
-      [
-        "haven't",
-        "received"
-      ],
-      68
-    ],
-    [
-      [
-        "especially",
-        "since"
-      ],
-      65
+      203
     ],
     [
       [
         "two",
         "weeks"
       ],
-      64
+      162
     ],
     [
       [
-        "treatment",
-        "plan"
+        "especially",
+        "since"
       ],
-      61
-    ],
-    [
-      [
-        "appointment",
-        "scheduled"
-      ],
-      61
-    ],
-    [
-      [
-        "test",
-        "results"
-      ],
-      60
-    ],
-    [
-      [
-        "about",
-        "timeline"
-      ],
-      58
+      155
     ],
     [
       [
         "about",
         "how"
       ],
-      58
+      144
     ],
     [
       [
-        "referral",
-        "request"
+        "treatment",
+        "plan"
       ],
-      56
-    ],
-    [
-      [
-        "refill",
-        "request"
-      ],
-      56
-    ],
-    [
-      [
-        "frustrated",
-        "because"
-      ],
-      55
-    ],
-    [
-      [
-        "insurance",
-        "claim"
-      ],
-      54
+      142
     ],
     [
       [
         "follow",
         "appointment"
       ],
-      54
+      127
     ],
     [
       [
-        "let",
-        "know"
+        "haven't",
+        "received"
       ],
-      53
-    ],
-    [
-      [
-        "patient",
-        "portal"
-      ],
-      52
+      126
     ],
     [
       [
         "last",
         "thursday"
       ],
-      50
-    ],
-    [
-      [
-        "next",
-        "week"
-      ],
-      50
-    ],
-    [
-      [
-        "back",
-        "forth"
-      ],
-      50
-    ],
-    [
-      [
-        "week",
-        "ago"
-      ],
-      48
+      121
     ],
     [
       [
         "about",
         "why"
       ],
-      48
+      120
+    ],
+    [
+      [
+        "frustrated",
+        "because"
+      ],
+      120
     ],
     [
       [
         "about",
-        "week"
+        "timeline"
       ],
-      45
+      115
     ],
     [
       [
-        "feels",
-        "like"
+        "patient",
+        "portal"
       ],
-      43
+      103
     ],
     [
       [
-        "lab",
+        "test",
         "results"
       ],
-      41
+      103
+    ],
+    [
+      [
+        "completely",
+        "unacceptable"
+      ],
+      101
+    ],
+    [
+      [
+        "appointment",
+        "scheduled"
+      ],
+      99
+    ],
+    [
+      [
+        "let",
+        "know"
+      ],
+      99
+    ],
+    [
+      [
+        "insurance",
+        "claim"
+      ],
+      98
     ],
     [
       [
         "next",
-        "tuesday"
+        "week"
       ],
-      41
+      98
     ],
     [
       [
-        "checked",
-        "portal"
+        "refill",
+        "request"
       ],
-      40
+      98
     ],
     [
       [
-        "what",
-        "happened"
+        "week",
+        "ago"
       ],
-      39
-    ],
-    [
-      [
-        "started",
-        "about"
-      ],
-      39
-    ],
-    [
-      [
-        "referral",
-        "specialist"
-      ],
-      39
+      97
     ],
     [
       [
         "it's",
         "causing"
       ],
-      39
+      95
     ],
     [
       [
-        "request",
-        "last"
+        "weeks",
+        "now"
       ],
-      38
+      95
     ],
     [
       [
-        "ago",
-        "when"
-      ],
-      38
-    ],
-    [
-      [
-        "concerned",
-        "about"
-      ],
-      37
-    ],
-    [
-      [
-        "following",
+        "referral",
         "request"
       ],
-      36
-    ],
-    [
-      [
-        "portal",
-        "morning"
-      ],
-      36
-    ],
-    [
-      [
-        "longer",
-        "expected"
-      ],
-      35
-    ],
-    [
-      [
-        "when",
-        "can"
-      ],
-      35
-    ],
-    [
-      [
-        "it's",
-        "frustrating"
-      ],
-      35
-    ],
-    [
-      [
-        "need",
-        "clarification"
-      ],
-      34
-    ],
-    [
-      [
-        "next",
-        "steps"
-      ],
-      34
-    ],
-    [
-      [
-        "scheduled",
-        "next"
-      ],
-      34
-    ],
-    [
-      [
-        "causing",
-        "lot"
-      ],
-      34
-    ],
-    [
-      [
-        "during",
-        "call"
-      ],
-      33
-    ],
-    [
-      [
-        "wanted",
-        "follow"
-      ],
-      33
+      93
     ],
     [
       [
         "about",
-        "delay"
+        "week"
       ],
-      33
+      92
+    ],
+    [
+      [
+        "need",
+        "escalated"
+      ],
+      92
+    ],
+    [
+      [
+        "what",
+        "happened"
+      ],
+      91
+    ],
+    [
+      [
+        "escalated",
+        "immediately"
+      ],
+      87
+    ],
+    [
+      [
+        "confused",
+        "because"
+      ],
+      86
     ],
     [
       [
         "about",
         "what"
       ],
-      33
+      86
+    ],
+    [
+      [
+        "started",
+        "about"
+      ],
+      85
+    ],
+    [
+      [
+        "ago",
+        "when"
+      ],
+      84
+    ],
+    [
+      [
+        "feels",
+        "like"
+      ],
+      82
+    ],
+    [
+      [
+        "request",
+        "last"
+      ],
+      81
+    ],
+    [
+      [
+        "about",
+        "delay"
+      ],
+      81
+    ],
+    [
+      [
+        "expect",
+        "corrected"
+      ],
+      80
+    ],
+    [
+      [
+        "concerned",
+        "about"
+      ],
+      79
+    ],
+    [
+      [
+        "it's",
+        "frustrating"
+      ],
+      79
+    ],
+    [
+      [
+        "right",
+        "now"
+      ],
+      77
+    ],
+    [
+      [
+        "need",
+        "clarification"
+      ],
+      75
+    ],
+    [
+      [
+        "lab",
+        "results"
+      ],
+      75
+    ],
+    [
+      [
+        "referral",
+        "specialist"
+      ],
+      75
+    ],
+    [
+      [
+        "new",
+        "medication"
+      ],
+      74
+    ],
+    [
+      [
+        "since",
+        "appointment"
+      ],
+      74
+    ],
+    [
+      [
+        "multiple",
+        "times"
+      ],
+      73
+    ],
+    [
+      [
+        "when",
+        "can"
+      ],
+      73
+    ],
+    [
+      [
+        "next",
+        "tuesday"
+      ],
+      71
     ]
   ]
 }

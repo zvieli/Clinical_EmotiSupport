@@ -9,7 +9,6 @@ from collections import Counter
 
 from ollama import chat
 
-# Keep in sync with NLP/Model/modelCreation.py EMOTIONS
 EMOTIONS = ["anxiety", "confusion", "frustration", "anger", "disappointment", "satisfaction"]
 
 DEFAULT_MODEL_NAME = "deepseek-r1:8b"
@@ -35,9 +34,6 @@ Important:
 - You MUST follow the exact emotions mapping provided in the user prompt.
 """.strip()
 
-
-# Minimal lexicon to catch explicit emotion wording that can confuse training labels.
-# We intentionally keep it small and high-precision.
 EMOTION_WORD_PATTERNS = {
     "anxiety": re.compile(
         r"\b(anxious|anxiety|worried|worry|concerned|panic|panicked|nervous|scared|afraid|stressed(?!\s+test)|stressed\s+out)\b",
@@ -185,7 +181,7 @@ def build_prompt(kind: str, emotions_map: dict, domain: str):
                 "Tone: calm, matter-of-fact, but with positive outcome.\n"
                 "Mention what changed (approved/posted/scheduled/corrected) and that no further action is needed.\n"
             )
-        else:  # caregiver_note
+        else: 
             style_extra = (
                 "Write as a caregiver updating that the situation is now handled.\n"
                 "Keep it realistic and short.\n"
@@ -371,8 +367,7 @@ def main():
         if kind == "satisfaction_only" or kind == "satisfaction_varied":
             return {**{e: 0 for e in EMOTIONS}, "satisfaction": 1}
         if kind == "mixed_resolved":
-            # Keep satisfaction=1 but add one mild negative label to create a gray boundary.
-            extra = random.choice(["frustration", "anxiety", "disappointment"])  # keep realistic
+            extra = random.choice(["frustration", "anxiety", "disappointment"])
             m = {e: 0 for e in EMOTIONS}
             m["satisfaction"] = 1
             m[extra] = 1

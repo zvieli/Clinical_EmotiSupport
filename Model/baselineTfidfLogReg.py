@@ -122,7 +122,6 @@ def main():
 
     clf.fit(X_train_vec, y_train)
 
-    # Decision based on probabilities if available
     if hasattr(clf, "decision_function"):
         scores = clf.decision_function(X_val_vec)
         probs = sigmoid(np.asarray(scores))

@@ -23,18 +23,14 @@ def decode_predictions(probs_row, emotions, threshold, neutral_threshold, max_la
     probs_row = np.array(probs_row, dtype=float)
     max_prob = float(probs_row.max())
 
-    # Neutral gate
     if max_prob < neutral_threshold:
         return []
 
-    # Normal thresholding
     idxs = np.where(probs_row >= threshold)[0].tolist()
 
-    # Fallback: not neutral but nothing passed threshold => choose top-1
     if len(idxs) == 0:
         idxs = [int(np.argmax(probs_row))]
 
-    # Cap to max_labels by probability
     if len(idxs) > max_labels:
         idxs = sorted(idxs, key=lambda i: probs_row[i], reverse=True)[:max_labels]
 
@@ -56,8 +52,8 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="Evaluate a locally-saved multi-label Transformers model")
-    parser.add_argument("--model_dir", type=str, default=r"Baseline Model\Model\distilbert_run")
-    parser.add_argument("--data_path", type=str, default=r"Data\dataset.jsonl")
+    parser.add_argument("--model_dir", type=str, default=r"ClinicalBERT_Run_v1")
+    parser.add_argument("--data_path", type=str, default=r"Data\dataset_final_v4.jsonl")
     parser.add_argument("--max_length", type=int, default=256)
     parser.add_argument(
         "--threshold",
@@ -105,9 +101,6 @@ def main():
     data_path = args.data_path
     max_length = args.max_length
 
-    # =======================
-    # Load metadata
-    # =======================
     meta_path = os.path.join(model_dir, "emotions.json")
     with open(meta_path, "r", encoding="utf-8") as f:
         meta = json.load(f)
@@ -115,7 +108,6 @@ def main():
     emotions = meta["emotions"]
     threshold = float(meta.get("threshold", 0.5))
 
-    # You said you already added these fields:
     neutral_threshold = float(meta.get("neutral_threshold", 0.35))
 
     max_labels = int(meta.get("max_labels", 3))
@@ -138,20 +130,15 @@ def main():
     print("max_labels:", max_labels)
     print("===========================\n")
 
-    # =======================
-    # Load dataset
-    # =======================
     data = read_jsonl(data_path)
 
     texts = [x["text"] for x in data]
-    # Expecting: obj["emotions"] is dict like {"anger":0/1, ...} possibly all zeros for neutral
     y_true = np.array(
         [[int(x.get("emotions", {}).get(e, 0)) for e in emotions] for x in data],
         dtype=int
     )
 
     if args.split != "all":
-        # Prefer a stable split saved by training (prevents leakage arguments).
         split_path = os.path.join(model_dir, "split_indices.json")
         if os.path.exists(split_path):
             with open(split_path, "r", encoding="utf-8") as f:
@@ -182,9 +169,6 @@ def main():
 
     print(f"Evaluating on {len(texts)} samples\n")
 
-    # =======================
-    # Load model
-    # =======================
     tokenizer = AutoTokenizer.from_pretrained(model_dir, local_files_only=True)
     model = AutoModelForSequenceClassification.from_pretrained(model_dir, local_files_only=True)
     model.eval()
@@ -192,9 +176,6 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
 
-    # =======================
-    # Predict (batched)
-    # =======================
     batch_size = 16
     all_probs = []
 
@@ -214,11 +195,8 @@ def main():
         probs = sigmoid(logits)
         all_probs.append(probs)
 
-    probs = np.vstack(all_probs)  # shape: [N, num_labels]
+    probs = np.vstack(all_probs)
 
-    # =======================
-    # Optional: scan neutral_threshold
-    # =======================
     if args.scan_neutral_threshold:
         max_probs = probs.max(axis=1)
         true_is_neutral = (y_true.sum(axis=1) == 0)
@@ -279,9 +257,6 @@ def main():
                 json.dump(meta, f, ensure_ascii=False, indent=2)
             print(f"Updated {meta_path} with neutral_threshold={best['neutral_threshold']}")
 
-    # =======================
-    # Apply your decoding logic
-    # =======================
     y_pred = np.zeros_like(y_true)
 
     pred_none = 0
@@ -300,9 +275,6 @@ def main():
         else:
             y_pred[i, idxs] = 1
 
-    # =======================
-    # Metrics
-    # =======================
     micro_f1 = f1_score(y_true, y_pred, average="micro", zero_division=0)
     micro_p = precision_score(y_true, y_pred, average="micro", zero_division=0)
     micro_r = recall_score(y_true, y_pred, average="micro", zero_division=0)
@@ -311,10 +283,8 @@ def main():
     macro_p = precision_score(y_true, y_pred, average="macro", zero_division=0)
     macro_r = recall_score(y_true, y_pred, average="macro", zero_division=0)
 
-    # Subset accuracy (exact match per sample)
     subset_acc = float((y_true == y_pred).all(axis=1).mean())
 
-    # Neutral detection metrics (treat neutral as y.sum==0)
     true_is_neutral = (y_true.sum(axis=1) == 0)
     pred_is_neutral = (y_pred.sum(axis=1) == 0)
 
@@ -325,9 +295,6 @@ def main():
     neutral_precision = neutral_tp / (neutral_tp + neutral_fp) if (neutral_tp + neutral_fp) > 0 else 0.0
     neutral_recall = neutral_tp / (neutral_tp + neutral_fn) if (neutral_tp + neutral_fn) > 0 else 0.0
 
-    # =======================
-    # Print summary
-    # =======================
     print("\n=== Overall Metrics ===")
     print(f"Micro  F1: {micro_f1:.4f} | P: {micro_p:.4f} | R: {micro_r:.4f}")
     print(f"Macro  F1: {macro_f1:.4f} | P: {macro_p:.4f} | R: {macro_r:.4f}")
@@ -343,8 +310,6 @@ def main():
     print("\n=== Per-label Report ===")
     print(classification_report(y_true, y_pred, target_names=emotions, zero_division=0))
 
-    # Optional: show a few worst-looking examples (high confidence wrong / weird)
-    # Here: samples where model predicted neutral but true not neutral, or vice versa
     print("\n=== Example Errors (up to 10) ===")
     shown = 0
     for i in range(len(texts)):
@@ -364,7 +329,6 @@ def main():
             print("PROBS:", {emotions[j]: float(probs[i, j]) for j in range(len(emotions))})
 
             shown += 1
-
 
 if __name__ == "__main__":
     main()

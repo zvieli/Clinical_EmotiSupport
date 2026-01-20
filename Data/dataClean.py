@@ -4,14 +4,12 @@ import os
 import re
 from collections import Counter
 
-DEFAULT_IN_FILE = os.path.join("NLP", "Data", "dataset.jsonl")
-DEFAULT_OUT_FILE = os.path.join("NLP", "Data", "dataset.cleaned.jsonl")
+DEFAULT_IN_FILE = os.path.join("Data", "dataset.jsonl")
+DEFAULT_OUT_FILE = os.path.join("Data", "dataset.cleaned.jsonl")
 
-# Keep in sync with NLP/Model/modelCreation.py EMOTIONS
 EMOTION_KEYS = ["anxiety", "confusion", "frustration", "anger", "disappointment", "satisfaction"]
 DOMAIN_KEYS = {"clinical", "administrative"}
 
-# High-precision patterns: enforce consistency (word present => label=1).
 EMOTION_WORD_PATTERNS = {
     "anxiety": re.compile(
         r"\b(anxious|anxiety|worried|worry|concerned|panic|panicked|nervous|scared|afraid|stressed(?!\s+test)|stressed\s+out)\b",
