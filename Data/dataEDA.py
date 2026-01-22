@@ -7,7 +7,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Arguments
-DEFAULT_DATA_PATH = r"Data\dataset_final_v4.jsonl"
+# Use absolute paths relative to this script to avoid CWD issues
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_DATA_PATH = os.path.join(SCRIPT_DIR, "dataset_refined_v6_reindexed.jsonl")
+DEFAULT_SAVE_DIR = os.path.join(SCRIPT_DIR, "eda_outputs")
+
 EMOTION_KEYS = ["anxiety", "confusion", "frustration", "anger", "disappointment", "satisfaction"]
 DOMAIN_KEYS = ["clinical", "administrative"]
 
@@ -17,7 +21,7 @@ def active_emotions(emotions_dict: dict):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--data_path", type=str, default=DEFAULT_DATA_PATH)
-    parser.add_argument("--save_dir", type=str, default=os.path.join("Data", "eda_outputs"))
+    parser.add_argument("--save_dir", type=str, default=DEFAULT_SAVE_DIR)
     args = parser.parse_args()
 
     os.makedirs(args.save_dir, exist_ok=True)

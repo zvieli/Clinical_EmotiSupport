@@ -1,4 +1,4 @@
-# Run with this command: python Model\modelCreation.py --data_path "Data\dataset_final_v4.jsonl" --out_dir "ClinicalBERT_Run_v1" --epochs 5 --batch 8 --lr 2e-5
+# Run with this command: python Model\modelCreation.py --data_path "Data\dataset_refined_v6_reindexed.jsonl" --out_dir "ClinicalBERT_Run_v1" --epochs 5 --batch 8 --lr 2e-5
 import os
 import json
 import argparse

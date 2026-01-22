@@ -221,3 +221,5 @@ __marimo__/
 
 # Large model artifacts (keep locally; GitHub blocks >100MB files)
 Baseline Model/
+ClinicalBERT_Run_v1/
+.github

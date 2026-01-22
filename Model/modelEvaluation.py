@@ -12,22 +12,30 @@ def sigmoid(x):
     return 1.0 / (1.0 + np.exp(-x))
 
 
-def decode_predictions(probs_row, emotions, threshold, neutral_threshold, max_labels):
+def decode_predictions(probs_row, emotions, thresholds, neutral_threshold, max_labels):
     """
     Implements:
-    - neutral_threshold: if max prob < neutral_threshold => "none"
-    - threshold: select labels with prob >= threshold
+    - neutral_threshold: using guardrail logic: if max prob < neutral_threshold => force "none"
+    - thresholds: dictionary or float. if dict, use specific threshold per label.
     - max_labels: cap number of predicted labels to top-k by probability
-    - fallback: if not neutral but nothing passed threshold => take top-1
     """
     probs_row = np.array(probs_row, dtype=float)
     max_prob = float(probs_row.max())
 
+    # GUARDRAIL: if the highest confidence is below neutral_threshold, 
+    # force empty prediction (neutral) regardless of individual thresholds.
     if max_prob < neutral_threshold:
         return []
 
-    idxs = np.where(probs_row >= threshold)[0].tolist()
+    idxs = []
+    for i, score in enumerate(probs_row):
+        label_name = emotions[i]
+        # Use specific threshold if available, else 0.5 default
+        thr = thresholds.get(label_name, 0.5) if isinstance(thresholds, dict) else thresholds
+        if score >= thr:
+            idxs.append(i)
 
+    # Fallback: if guardrail passed but no individual threshold passed, take top-1
     if len(idxs) == 0:
         idxs = [int(np.argmax(probs_row))]
 
@@ -106,9 +114,18 @@ def main():
         meta = json.load(f)
 
     emotions = meta["emotions"]
-    threshold = float(meta.get("threshold", 0.5))
-
-    neutral_threshold = float(meta.get("neutral_threshold", 0.35))
+    
+    # Try to load custom dict thresholds, else fall back to single float
+    thresholds_config = meta.get("thresholds")
+    if thresholds_config and isinstance(thresholds_config, dict):
+        # We have the pro-mode dict
+        threshold = thresholds_config
+        # Also look for the guardrail specific key
+        neutral_threshold = float(meta.get("neutral_threshold_guardrail", meta.get("neutral_threshold", 0.35)))
+    else:
+        # Legacy mode
+        threshold = float(meta.get("threshold", 0.5))
+        neutral_threshold = float(meta.get("neutral_threshold", 0.35))
 
     max_labels = int(meta.get("max_labels", 3))
 
@@ -125,7 +142,7 @@ def main():
     print("split:", args.split)
     print("seed/test_size:", args.seed, "/", args.test_size)
     print("emotions:", emotions)
-    print("threshold:", threshold)
+    print("thresholds (logic):", threshold)
     print("neutral_threshold:", neutral_threshold)
     print("max_labels:", max_labels)
     print("===========================\n")
@@ -266,7 +283,7 @@ def main():
         idxs = decode_predictions(
             probs_row=probs[i],
             emotions=emotions,
-            threshold=threshold,
+            thresholds=threshold, # Pass the dict or float
             neutral_threshold=neutral_threshold,
             max_labels=max_labels
         )
