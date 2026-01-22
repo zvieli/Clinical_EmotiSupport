@@ -44,16 +44,51 @@ The project classifies the following 6 emotions:
 **Dataset (v6 refined):**
 - Size: 1,996 purified messages.
 - 0 Logical Conflicts (e.g., no Satisfaction + Anger).
-- 0 Text Artifacts (cleaned headers/templates).
 
-**Test Set Metrics (N=400, 20% split):**
+| Label | Count | % of Data | Note |
+| :--- | :--- | :--- | :--- |
+| **Anxiety** | 996 | 49.9% | Dominant emotion (High baseline) |
+| **Frustration** | 957 | 47.9% | Key indicator for churn risk |
+| **Confusion** | 950 | 47.6% | Indicates UX/Process failures |
+| **Disappointment** | 695 | 34.8% | Service gap indicator |
+| **Anger** | 628 | 31.5% | Moderately imbalanced (Require low threshold) |
+| **Satisfaction** | 110 | 5.5% | **Highly Imbalanced** (Requires high precision threshold) |
 
-| Metric | Value | Note |
-| :--- | :--- | :--- |
-| **Micro F1** | **0.84** | Strong overall performance |
-| **Neutral Precision** | **0.94** | Highly trustworthy when filtering noise |
-| **Anger Recall** | **0.59** | Massive improvement (vs ~0.45 in baseline) due to adaptive thresholding |
-| **Subset Accuracy** | **0.55** | Exact match ratio |
+## Test Set Metrics (Detailed)
+
+Evaluated on N=400 split using Business-Aligned thresholds.
+
+**Overall:**
+- **Micro F1:** 0.84
+- **Macro F1:** 0.80
+
+**Per-Label Performance:**
+
+| Emotion | Precision | Recall | F1 | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **Anxiety** | 0.97 | 0.87 | **0.92** | Excellent reliability |
+| **Confusion** | 0.92 | 0.85 | **0.89** | Strong operational signal |
+| **Frustration** | 0.95 | 0.82 | **0.88** | Reliable churn prediction |
+| **Disappointment** | 0.87 | 0.75 | **0.81** | Good, but subjective |
+| **Satisfaction** | 0.73 | 0.67 | **0.70** | Challenged by low sample size (5.5%) |
+| **Anger** | 0.66 | 0.59 | **0.62** | Trade-off: Lower precision accepted for higher recall |
+
+**Neutral Detection:**
+- **Precision:** 0.94 (Trustworthy "noise filter")
+
+## Limitations & Failure Analysis
+
+While the model performs well (0.84 Micro F1), users should be aware of known limitations:
+
+1.  **Politeness vs. Sentiment Gap:** The model sometimes struggles with "Polite Anger" — highly formal messages that convey fury without using explicit words. We addressed this with lower Anger thresholds, but some subtle sarcasm may still be missed.
+2.  **Short-Text Ambiguity:** Messages with <5 words (e.g., "Not yet", "Waiting") lack context and may default to Neutral even if the user is annoyed.
+3.  **Satisfaction Scarcity:** With only 5.5% satisfaction data, the model is conservative about predicting positive outcomes. It requires strong evidence ("perfect", "thank you so much") to trigger this label.
+
+## Training Environment
+
+- **Hardware:** Single NVIDIA GPU (Consumer Grade) / Standard CPU.
+- **Training Time:** ~90 minutes (5 epochs).
+- **Inference Latency:** <100ms per message (Batch size 1, CPU).
 
 ## Reproducibility
 
